@@ -1,0 +1,30 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+陈有一/
+sunny77（1.2生日版）/
+阿P律师/
+富贵儿考研数学/
+树/
+sunny88/
+树./
+陈有一⏳/
+小苒加油鸭/
+sunny77/
+树.🌱/
+5轩/
+稀里糊兔/
+.git/
+美尤柰李/
+冬芽/
+.venv/
+5🐟轩/
+未知主播/
+稀里糊兔（夏涂涂）/
+# Virtual environments
+.venv
