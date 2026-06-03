@@ -1,11 +1,12 @@
-import os
-import subprocess
-import multiprocessing
-import time
 import fcntl
-import sys
-from datetime import datetime
+import multiprocessing
+import os
 import random
+import subprocess
+import sys
+import time
+from datetime import datetime
+
 import requests
 from playwright.sync_api import sync_playwright
 
@@ -52,13 +53,15 @@ def check_live_status(url, status_xpath, name_xpath):
                     channel="chrome",  # 使用系统安装的 Chrome
                     headless=True,
                     args=[
-                        '--disable-blink-features=AutomationControlled',
-                        '--disable-dev-shm-usage',
-                        '--no-sandbox',
-                        '--disable-setuid-sandbox',
-                        '--disable-gpu',
-                    ]
+                        "--disable-blink-features=AutomationControlled",
+                        "--disable-dev-shm-usage",
+                        "--no-sandbox",
+                        "--disable-setuid-sandbox",
+                        "--disable-gpu",
+                    ],
                 )
+                import time
+
                 context = browser.new_context(
                     user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
                     viewport={"width": 1920, "height": 1080},
@@ -70,6 +73,7 @@ def check_live_status(url, status_xpath, name_xpath):
 
                 # Wait for dynamic content to load (增加到10秒)
                 page.wait_for_timeout(10000)
+                # time.sleep(100)
 
                 # 1. Get Account Name
                 name_locator = page.locator(f"xpath={name_xpath}")
@@ -79,14 +83,16 @@ def check_live_status(url, status_xpath, name_xpath):
                     print(f"  -> [{url}] Account Name: '{account_name}'")
                 else:
                     print(f"  -> [{url}] Could not find account name element.")
-                
+
                 # Create directory for this account if not exists
                 try:
                     if not os.path.exists(account_name):
                         os.mkdir(account_name)
                 except OSError as e:
-                    print(f"  -> Warning: Could not create directory {account_name}: {e}")
-                
+                    print(
+                        f"  -> Warning: Could not create directory {account_name}: {e}"
+                    )
+
                 # 2. Check Live Status
                 status_locator = page.locator(f"xpath={status_xpath}")
 
@@ -104,10 +110,12 @@ def check_live_status(url, status_xpath, name_xpath):
                         def handle_request(request):
                             # Look for FLV stream URL
                             # User example: https://pull-flv-q6.douyincdn.com/stage/stream-...
-                            
+
                             # Debug: Print all FLV/M3U8 requests to help debugging
                             if ".flv" in request.url or ".m3u8" in request.url:
-                                print(f"  -> [DEBUG] Detected potential stream: {request.url}")
+                                print(
+                                    f"  -> [DEBUG] Detected potential stream: {request.url}"
+                                )
 
                             # Relaxed condition: Just check for .flv, removed "pull-flv" requirement
                             if ".flv" in request.url:
@@ -189,7 +197,7 @@ def check_live_status(url, status_xpath, name_xpath):
             while os.path.exists(filename + ".mkv"):
                 filename += f"_{cnt}"
                 cnt += 1
-            
+
             print(f"  -> Executing download script for {filename}...")
             try:
                 # Execute: ./copyStream.sh {stream url} {account_name+DateTime}
@@ -233,11 +241,14 @@ def main():
     print(f"Loaded URLs: {urls}")
 
     # The XPath provided for status
-    status_xpath = "/html/body/div[2]/div[1]/div[4]/div[2]/div/div/div/div[2]/div[1]/div/a/div/div/span/span[1]"
-
+    # status_xpath = "/html/body/div[2]/div[1]/div[4]/div[2]/div/div/div/div[2]/div[1]/div/a/div/div/span/span[1]"
+    status_xpath = (
+        "//*[@id='user_detail_element']/div/div[2]/div[1]/div/a/div/div/span/span"
+    )
     # The XPath provided for name
-    name_xpath = "/html/body/div[2]/div[1]/div[4]/div[2]/div/div/div/div[2]/div[2]/div[1]/h1/span/span/span/span/span/span"
-
+    # name_xpath = "/html/body/div[2]/div[1]/div[4]/div[2]/div/div/div/div[2]/div[2]/div[1]/h1/span/span/span/span/span/span"
+    # name_xpath = "/html/div/div[2]/div[2]/div[1]/h1/span/span/span/span/span/span"
+    name_xpath = "//*[@id='user_detail_element']/div/div[2]/div[2]/div[1]/h1/span/span/span/span/span/span"
     print("Starting Douyin Live Monitor...")
     print("Press Ctrl+C to stop.")
     print("-" * 50)

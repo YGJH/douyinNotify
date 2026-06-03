@@ -5,6 +5,8 @@ build/
 dist/
 wheels/
 *.egg-info
+一只小鼠/
+*.mkv
 
 陈有一/
 sunny77（1.2生日版）/
