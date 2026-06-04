@@ -6,6 +6,7 @@ import subprocess
 import sys
 import time
 from datetime import datetime
+from tkinter.constants import FALSE
 
 import requests
 from playwright.sync_api import sync_playwright
@@ -37,9 +38,8 @@ def check_live_status(url, status_xpath, name_xpath):
     print(f"Starting monitor for: {url}")
 
     # XPath to find the live room link
-    click_xpath = (
-        "/html/body/div[2]/div[1]/div[4]/div[2]/div/div/div/div[2]/div[1]/div/a"
-    )
+    click_xpath = '//*[@id="user_detail_element"]/div/div[2]/div[1]/div/a'
+    # //*[@id="user_detail_element"]/div/div[2]/div[1]/div/a
 
     while True:
         is_live = False
